@@ -1,4 +1,5 @@
 import Button from "@/components/shared/ui/Button";
+import TextField from "@/components/shared/ui/TextField";
 
 export default function Home() {
   return (
@@ -21,6 +22,8 @@ export default function Home() {
         <Button variant="secondary" loading>
           سلام
         </Button>
+
+        <TextField placeholder="کد ملی"/>
       </div>
     </>
   );
