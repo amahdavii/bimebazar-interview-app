@@ -57,9 +57,11 @@ const CarOwnerInfo: FC = () => {
                 : "لطفاً آدرسی را که می‌خواهید روی بیمه‌نامه درج شود، انتخاب کنید."}{" "}
             </p>
 
-            <Button variant="default" fullWidth onClick={() => open()}>
-              انتخاب از آدرس‌های من
-            </Button>
+            <div className={selectedAddress ? "invisible" : "visible"}>
+              <Button variant="default" fullWidth onClick={() => open()}>
+                انتخاب از آدرس‌های من
+              </Button>
+            </div>
           </section>
 
           <div className="flex justify-end pt-[1.5rem]">

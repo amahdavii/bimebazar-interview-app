@@ -26,7 +26,7 @@ const AddressSelector: FC<Props> = ({ isOpen, close }) => {
     isLoaded,
   } = useAddressContext();
 
-  const { setFormData } = useFormContext();
+  const { formData, setFormData } = useFormContext();
   const { fetchAddresses } = useAddresses();
 
   useEffect(() => {
@@ -36,6 +36,12 @@ const AddressSelector: FC<Props> = ({ isOpen, close }) => {
         .catch((err) => console.error("خطا در دریافت آدرس‌ها:", err));
     }
   }, [isOpen, isLoaded, fetchAddresses, setAddresses]);
+
+  useEffect(() => {
+    if (!isOpen && !formData.addressId) {
+      setSelectedAddressId(null);
+    }
+  }, [isOpen, formData.addressId, setSelectedAddressId]);
 
   const handleRemove = (id: string) => {
     setSelectedAddressForDeletion(id);
@@ -76,7 +82,12 @@ const AddressSelector: FC<Props> = ({ isOpen, close }) => {
         )}
       </BottomSheetContent>
       <BottomSheetFooter>
-        <Button variant="secondary" fullWidth onClick={handleConfirm}>
+        <Button
+          variant="secondary"
+          fullWidth
+          onClick={handleConfirm}
+          disabled={!selectedAddressId}
+        >
           تایید
         </Button>
       </BottomSheetFooter>
