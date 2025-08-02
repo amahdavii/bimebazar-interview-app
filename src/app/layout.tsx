@@ -6,6 +6,7 @@ import { FormProvider } from "@/context/FormContext";
 import { AddressProvider } from "@/context/AddressContext";
 
 import "@/styles/globals.css";
+import { Toaster } from "react-hot-toast";
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic", "latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({
           <AddressProvider>
             <SectionHeader title="مشخصات بیمه نامه" icon={<CarSVG />} />
             {children}
+            <Toaster position="top-center" />
           </AddressProvider>
         </FormProvider>
       </body>
