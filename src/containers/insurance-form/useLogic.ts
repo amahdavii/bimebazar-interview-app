@@ -9,12 +9,16 @@ import { useRouter } from "next/navigation";
 import { useOrderSubmit } from "@/services/order/useOrderSubmit";
 import { useAddressContext } from "@/context/AddressContext";
 import { useEffect } from "react";
+import useToast from "@/hooks/useToast";
+import { AxiosError } from "axios";
+import { ErrorResponse } from "@/types/order";
 
 const useLogic = () => {
   const { isOpen, open, close } = useModalQuery("modal", "select-address");
   const { submit, isLoading } = useOrderSubmit();
   const { addresses } = useAddressContext();
   const { push } = useRouter();
+  const toast = useToast();
 
   const { formData, setFormData } = useFormContext();
 
@@ -40,28 +44,37 @@ const useLogic = () => {
     }
   }, [formData.addressId, setValue]);
 
-  const onSubmit = (data: FormData) => {
-    setFormData((prev) => ({
-      ...prev,
-      nationalId: data.nationalCode,
-      phoneNumber: data.mobile,
-    }));
+  const onSubmit = async (data: FormData) => {
+    try {
+      setFormData((prev) => ({
+        ...prev,
+        nationalId: data.nationalCode,
+        phoneNumber: data.mobile,
+      }));
 
-    submit({
-      ...formData,
-      nationalId: data.nationalCode,
-      phoneNumber: data.mobile,
-    })
-      .then(() => push("/submission-success"))
-      .catch((err) => console.log("err", err));
+      await submit({
+        ...formData,
+        nationalId: data.nationalCode,
+        phoneNumber: data.mobile,
+      });
+
+      push("/submission-success");
+    } catch (error) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      const errors = axiosError.response?.data?.errors;
+
+      if (Array.isArray(errors)) {
+        errors.forEach((errMsg) => toast.error(errMsg));
+      } else {
+        toast.error("خطایی در ارسال اطلاعات رخ داده است.");
+      }
+    }
   };
 
   const watchedNationalCode = watch("nationalCode");
   const watchedMobile = watch("mobile");
 
-  const handleSubmitWithValidation = handleSubmit((data) => {
-    onSubmit(data);
-  });
+  const handleSubmitWithValidation = handleSubmit(onSubmit);
 
   const selectedAddress = addresses.find(
     (item) => item.id === formData.addressId

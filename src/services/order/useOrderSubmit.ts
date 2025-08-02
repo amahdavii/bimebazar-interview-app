@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { OrderPayload } from "@/types/order";
+import { ErrorResponse, OrderPayload } from "@/types/order";
 import { AxiosError } from "axios";
 import { orderApi } from "@/services/order";
+import { useModalQuery } from "@/hooks/useModalQuery";
 
 export const useOrderSubmit = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
+  const { open } = useModalQuery("modal", "error");
 
   const submit = async (payload: OrderPayload) => {
     try {
@@ -13,11 +15,13 @@ export const useOrderSubmit = () => {
       setError(null);
       await orderApi.submitCompletion(payload);
     } catch (err) {
-      const axiosError = err as AxiosError;
+      const axiosError = err as AxiosError<ErrorResponse>;
 
-      const message = axiosError.message || "خطایی رخ داده است";
+      if (axiosError.response) {
+        open();
+      }
 
-      setError(message);
+      throw err;
     } finally {
       setIsLoading(false);
     }
