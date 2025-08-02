@@ -1,9 +1,13 @@
+"use client";
+
 import Image from "next/image";
 
 import VehicleInfo from "@/containers/insurance-result/components/VehicleInfo";
 import Button from "@/components/shared/ui/Button";
+import { useRouter } from "next/navigation";
 
 const InsuranceResult = () => {
+  const { back } = useRouter();
   return (
     <>
       <main className="flex flex-col min-h-screen">
@@ -31,7 +35,9 @@ const InsuranceResult = () => {
         </div>
 
         <div className="flex justify-end py-[1rem] px-[1.125rem] fixed bottom-0 left-0">
-          <Button variant="secondary">بازگشت</Button>
+          <Button variant="secondary" onClick={() => back()}>
+            بازگشت
+          </Button>
         </div>
       </main>
     </>

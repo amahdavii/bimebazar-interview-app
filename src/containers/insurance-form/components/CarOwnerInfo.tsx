@@ -9,12 +9,14 @@ import useLogic from "@/containers/insurance-form/useLogic";
 
 const CarOwnerInfo: FC = () => {
   const {
+    open,
     register,
     errors,
     isLoading,
     watchedMobile,
     watchedNationalCode,
     handleSubmitWithValidation,
+    selectedAddress,
   } = useLogic();
 
   return (
@@ -43,10 +45,19 @@ const CarOwnerInfo: FC = () => {
 
           <section className="space-y-[0.375rem] mt-[2rem]">
             <h2 className="font-semibold">آدرس جهت درج روی بیمه نامه</h2>
-            <p>
-              لطفاً آدرسی را که می‌خواهید روی بیمه‌نامه درج شود، انتخاب کنید.
+            <p
+              className={`text-[0.875rem] ${
+                errors.addressId?.message && !selectedAddress?.details
+                  ? "text-[var(--input-error)]"
+                  : ""
+              }`}
+            >
+              {selectedAddress
+                ? selectedAddress.details
+                : "لطفاً آدرسی را که می‌خواهید روی بیمه‌نامه درج شود، انتخاب کنید."}{" "}
             </p>
-            <Button variant="default" fullWidth>
+
+            <Button variant="default" fullWidth onClick={() => open()}>
               انتخاب از آدرس‌های من
             </Button>
           </section>

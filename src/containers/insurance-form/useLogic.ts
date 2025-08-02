@@ -7,10 +7,13 @@ import { FormData, schema } from "@/containers/insurance-form/config";
 import { useFormContext } from "@/context/FormContext";
 import { useRouter } from "next/navigation";
 import { useOrderSubmit } from "@/services/order/useOrderSubmit";
+import { useAddressContext } from "@/context/AddressContext";
+import { useEffect } from "react";
 
 const useLogic = () => {
   const { isOpen, open, close } = useModalQuery("modal", "select-address");
   const { submit, isLoading } = useOrderSubmit();
+  const { addresses } = useAddressContext();
   const { push } = useRouter();
 
   const { formData, setFormData } = useFormContext();
@@ -19,6 +22,7 @@ const useLogic = () => {
     register,
     handleSubmit,
     getValues,
+    setValue,
     watch,
     formState: { errors, isValid },
   } = useForm<FormData>({
@@ -26,8 +30,15 @@ const useLogic = () => {
     defaultValues: {
       nationalCode: formData.nationalId,
       mobile: formData.phoneNumber,
+      addressId: formData.addressId,
     },
   });
+
+  useEffect(() => {
+    if (formData.addressId) {
+      setValue("addressId", formData.addressId, { shouldValidate: true });
+    }
+  }, [formData.addressId, setValue]);
 
   const onSubmit = (data: FormData) => {
     setFormData((prev) => ({
@@ -52,6 +63,10 @@ const useLogic = () => {
     onSubmit(data);
   });
 
+  const selectedAddress = addresses.find(
+    (item) => item.id === formData.addressId
+  );
+
   return {
     isOpen,
     open,
@@ -67,6 +82,7 @@ const useLogic = () => {
     isValid,
     isLoading,
     handleSubmitWithValidation,
+    selectedAddress,
   };
 };
 

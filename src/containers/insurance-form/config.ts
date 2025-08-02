@@ -16,6 +16,7 @@ export const schema = z.object({
   mobile: z
     .string()
     .refine(isValidIranianPhoneNumber, "شماره تلفن همراه معتبر نیست."),
+  addressId: z.string().nonempty(),
 });
 
 export type FormData = z.infer<typeof schema>;
