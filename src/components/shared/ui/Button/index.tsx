@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import { FC, ReactNode } from "react";
 import { buttonStyles, ButtonType, Variant } from "./config";
+import SpinnerSVG from "@/components/icons/SpinnerSVG";
 
 interface ButtonProps {
   children: ReactNode;
@@ -47,7 +48,7 @@ const Button: FC<ButtonProps> = ({
         config.className({ disabled, loading })
       )}
     >
-      {loading && <span className="spinner" />}
+      {loading && <SpinnerSVG />}
       <span>{children}</span>
     </button>
   );
