@@ -3,6 +3,7 @@ import { Vazirmatn } from "next/font/google";
 import "@/styles/globals.css";
 import SectionHeader from "@/components/shared/layout/SectionHeader";
 import CarSVG from "@/components/icons/CarSVG";
+import { FormProvider } from "@/context/FormContext";
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic", "latin"],
@@ -28,8 +29,10 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body className={`${vazirmatn.variable} antialiased`}>
-        <SectionHeader title="مشخصات بیمه نامه" icon={<CarSVG />} />
-        {children}
+        <FormProvider>
+          <SectionHeader title="مشخصات بیمه نامه" icon={<CarSVG />} />
+          {children}
+        </FormProvider>
       </body>
     </html>
   );
